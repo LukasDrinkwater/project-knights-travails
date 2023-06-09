@@ -1,101 +1,48 @@
 import _ from "lodash";
 import "./styles.css";
 
-// class that is the project and tasks for the todo list can be added to it.
+class Graph {
+  constructor(numVertices) {
+    this.numVertices = numVertices;
+    this.matrix = [];
 
-// use classes or a factory function to create each item that is added to
-// the specific project todo list.
+    for (let i = 0; i < numVertices; i++) {
+      this.matrix[i] = [];
+      for (let j = 0; j < numVertices; j++) {
+        this.matrix[i][j] = 0;
+      }
+    }
+  }
 
-const airports = "PHX BKK OKC JFK LAX MEX EZE HEL LOS LAP LIM".split(" ");
+  addEdge(source, destination) {
+    // Assuming the graph is undirected
+    this.matrix[source][destination] = 1;
+    this.matrix[destination][source] = 1;
+  }
 
-//graph can be represented 2 ways, either matrix  or adjacency list
+  print() {
+    for (let i = 0; i < this.numVertices; i++) {
+      const neighbors = [];
 
-let routes = [
-  ["PHX", "LAX"],
-  ["PHX", "JFK"],
-  ["JFK", "OKC"],
-  ["JFK", "HEL"],
-  ["JFK", "LOS"],
-  ["MEX", "LAX"],
-  ["MEX", "BKK"],
-  ["MEX", "LIM"],
-  ["MEX", "EZE"],
-  ["LIM", "BKK"],
-];
-
-//as an adjacency list
-
-//the graph
-
-const adjacencyList = new Map();
-
-//add node to map
-function addNode(airport) {
-  adjacencyList.set(airport, []);
-}
-
-// add edge, undirected
-function addEdge(origin, destination) {
-  adjacencyList.get(origin).push(destination);
-  adjacencyList.get(destination).push(origin);
-}
-
-//create the graph
-airports.forEach(addNode);
-
-routes.forEach((route) => addEdge(...route));
-
-console.log(adjacencyList);
-
-// breadth first seacrch
-// breadth first is good for finding the shortest route
-function bfs(start) {
-  const visited = new Set();
-
-  const queue = [start];
-
-  while (queue.length > 0) {
-    const airport = queue.shift(); //pulls the first element from the queue
-
-    const destinations = adjacencyList.get(airport);
-
-    for (const destination of destinations) {
-      if (destination === "BKK") {
-        console.log("found it!");
+      for (let j = 0; j < this.numVertices; j++) {
+        if (this.matrix[i][j] === 1) {
+          neighbors.push(j);
+        }
       }
 
-      if (!visited.has(destination)) {
-        // checks to see if the for loop has
-        //visited a node
-        visited.add(destination);
-        queue.push(destination);
-        console.log(destination);
-      }
+      console.log(`Vertex ${i} is connected to: ${neighbors.join(", ")}`);
     }
   }
 }
 
-// bfs("PHX");
+// Usage example
+const graph = new Graph(5);
+graph.addEdge(0, 1);
+graph.addEdge(0, 4);
+graph.addEdge(1, 2);
+graph.addEdge(1, 3);
+graph.addEdge(1, 4);
+graph.addEdge(2, 3);
+graph.addEdge(3, 4);
 
-// DFS depth first search
-
-function dfs(start, visited = new Set()) {
-  console.log(start);
-
-  visited.add(start);
-
-  const destinations = adjacencyList.get(start);
-
-  for (const destination of destinations) {
-    if (destination === "BKK") {
-      console.log("DFS found Bangkok in steps");
-      return;
-    }
-
-    if (!visited.has(destination)) {
-      dfs(destination, visited);
-    }
-  }
-}
-
-dfs("PHX");
+graph.print();
