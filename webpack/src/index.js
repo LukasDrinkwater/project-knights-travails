@@ -1,48 +1,56 @@
 import _ from "lodash";
 import "./styles.css";
 
-class Graph {
-  constructor(numVertices) {
-    this.numVertices = numVertices;
-    this.matrix = [];
-
-    for (let i = 0; i < numVertices; i++) {
-      this.matrix[i] = [];
-      for (let j = 0; j < numVertices; j++) {
-        this.matrix[i][j] = 0;
-      }
-    }
+class Square {
+  constructor(row, col) {
+    this.row = row;
+    this.col = col;
+    this.move1;
+    this.move2;
+    this.move3;
+    this.move4;
+    this.move5;
+    this.move6;
+    this.move7;
+    this.move8;
+    this.knight = false;
   }
-
-  addEdge(source, destination) {
-    // Assuming the graph is undirected
-    this.matrix[source][destination] = 1;
-    this.matrix[destination][source] = 1;
-  }
-
-  print() {
-    for (let i = 0; i < this.numVertices; i++) {
-      const neighbors = [];
-
-      for (let j = 0; j < this.numVertices; j++) {
-        if (this.matrix[i][j] === 1) {
-          neighbors.push(j);
-        }
-      }
-
-      console.log(`Vertex ${i} is connected to: ${neighbors.join(", ")}`);
-    }
+  toString() {
+    return ` (${this.row},${this.col})`;
   }
 }
 
-// Usage example
-const graph = new Graph(5);
-graph.addEdge(0, 1);
-graph.addEdge(0, 4);
-graph.addEdge(1, 2);
-graph.addEdge(1, 3);
-graph.addEdge(1, 4);
-graph.addEdge(2, 3);
-graph.addEdge(3, 4);
+class Board {
+  constructor() {
+    this.boardArray = [];
+  }
 
-graph.print();
+  createGameboard() {
+    let boardArray = this.boardArray;
+    let rowArray = [];
+
+    for (let i = 0; i < 8; i++) {
+      boardArray[i] = [];
+      for (let j = 0; j < 8; j++) {
+        let square = new Square(i, j);
+        boardArray[i][j] = square;
+      }
+    }
+
+    return boardArray;
+  }
+}
+
+let board = new Board();
+
+board.createGameboard();
+
+for (let i = 0; i < 8; i++) {
+  let boardString = "";
+  for (let j = 0; j < 8; j++) {
+    boardString += board.boardArray[i][j].toString();
+  }
+  console.log(boardString);
+}
+
+// console.log(board.boardArray);

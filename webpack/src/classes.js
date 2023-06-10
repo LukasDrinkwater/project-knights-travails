@@ -1,7 +1,22 @@
 class Graph {
   constructor() {
-    this.boardSize = 8;
+    this.boardArray = [];
   }
+
+  createGameboard() {
+    for (let i = 0; i > 8; i++) {
+      for (let j = 0; j > 8; j++) {
+        let square = [i, j];
+        this.boardArray.push(square);
+      }
+    }
+  }
+}
+
+function createGameboard() {
+  let boardArray = [];
+
+  for (let i = 0; i > 7; i++) {}
 }
 
 //each array of in array of arrays with be a node?
