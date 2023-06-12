@@ -5,14 +5,7 @@ class Square {
   constructor(row, col) {
     this.row = row;
     this.col = col;
-    this.move1;
-    this.move2;
-    this.move3;
-    this.move4;
-    this.move5;
-    this.move6;
-    this.move7;
-    this.move8;
+    this.possibleMoves = [];
     this.knight = false;
   }
   toString() {
@@ -70,9 +63,9 @@ class Board {
 
       // find and store the square you are looking at so you can do squre.movex =
       if (moveRow <= 7 && moveCol <= 7 && moveCol >= 0 && moveRow >= 0) {
-        let moveToSquare = board[moveRow][moveCol];
+        // let moveToSquare = board[moveRow][moveCol];
         // link the current square square
-        square["move" + moveNum] = moveToSquare;
+        square.possibleMoves.push(new Square(moveRow, moveCol));
         moveNum++;
       }
     }
@@ -87,6 +80,7 @@ class Board {
 
     //getting the current square will be similar to making them boardArray[i][j]
   }
+  finMinMoves(startArray, endArray) {}
 }
 
 let board = new Board();
