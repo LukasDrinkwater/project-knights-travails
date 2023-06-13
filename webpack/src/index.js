@@ -80,7 +80,46 @@ class Board {
 
     //getting the current square will be similar to making them boardArray[i][j]
   }
-  finMinMoves(startArray, endArray) {}
+  findMinMoves(startArray, endArray) {
+    let moveHistory = [];
+    const count = 0;
+    let startSquare;
+    let endSquare;
+
+    while (!startSquare && !endSquare) {
+      for (let square of this.boardArray) {
+        console.log(square);
+        if (square.row === startArray[0] && square.col === startArray[1]) {
+          startSquare = square;
+          moveHistory.push(square);
+          console.log(square);
+        }
+        if (square.row === endArray[0] && square.col === endArray[1]) {
+          endSquare = square;
+          console.log(square);
+        }
+      }
+    }
+
+    function findMinMovesRec(startSquare, endSquare) {}
+
+    while (moveHistory.length > 0) {
+      const square = moveHistory.shift();
+
+      for (const move of square.possibleMoves) {
+        moveHistory.push(move);
+      }
+
+      // shift first element off of the queue
+
+      //then visit that square, enqueue that squares children
+
+      // then  shift the first element and enqueue that squares children
+
+      // if a square is already in the queue dont add it again  so it doesnt go
+      // back to the square that the children came from********
+    }
+  }
 }
 
 let board = new Board();
@@ -97,4 +136,6 @@ for (let i = 0; i < 8; i++) {
 
 console.log(board.boardArray);
 
-// console.log(board.findLegalMoves(gameboard));
+board.findLegalMoves(gameboard);
+
+board.findMinMoves([0, 0], [1, 2]);
