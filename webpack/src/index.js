@@ -1,4 +1,4 @@
-import _, { find } from "lodash";
+import _, { endsWith, find, get } from "lodash";
 import "./styles.css";
 
 class Square {
@@ -30,11 +30,8 @@ class Board {
       }
     }
 
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
-        let square = boardArray[row][col];
-        this.findLegalMoves(square);
-      }
+    for (const square of boardArray) {
+      this.findLegalMoves(square);
     }
 
     return boardArray;
@@ -57,6 +54,7 @@ class Board {
     ];
 
     for (let moveset of moveSets) {
+      console.log(square, row, col);
       let moveRow = row + moveset[0];
       let moveCol = col + moveset[1];
       // let moveToSquare = board[moveRow][moveCol];
@@ -81,35 +79,37 @@ class Board {
     //getting the current square will be similar to making them boardArray[i][j]
   }
   findMinMoves(startArray, endArray) {
+    let queue = [];
+    let visisted = new Set();
     let moveHistory = [];
     const count = 0;
-    let startSquare;
-    let endSquare;
+    let board = this.boardArray;
 
-    while (!startSquare && !endSquare) {
-      for (let square of this.boardArray) {
-        console.log(square);
-        if (square.row === startArray[0] && square.col === startArray[1]) {
-          startSquare = square;
-          moveHistory.push(square);
-          console.log(square);
-        }
-        if (square.row === endArray[0] && square.col === endArray[1]) {
-          endSquare = square;
-          console.log(square);
-        }
-      }
+    function getSquareFromCoordinaes(row, col) {
+      const square = board[row][col];
+      return square;
     }
 
-    function findMinMovesRec(startSquare, endSquare) {}
+    let startSquare = getSquareFromCoordinaes(startArray[0], startArray[1]);
+    queue.push(startSquare);
+    visisted.add(startSquare);
+    let endSquare = getSquareFromCoordinaes(endArray[0], endArray[1]);
 
-    while (moveHistory.length > 0) {
-      const square = moveHistory.shift();
+    function findMinMovesRec(startSquare, endSquare, queue, visisted) {
+      // if (queue.length > 0) {
+      //   let square = queue.shift();
+      // }
+      while (queue.length > 0) {
+        let square = queue.shift();
 
-      for (const move of square.possibleMoves) {
-        moveHistory.push(move);
+        for (const move of square.possibleMoves) {
+          if (visisted.has(move)) {
+            queue.push(move);
+            visisted.add(move);
+          }
+        }
+        // console.log(`Square ${}`)
       }
-
       // shift first element off of the queue
 
       //then visit that square, enqueue that squares children
