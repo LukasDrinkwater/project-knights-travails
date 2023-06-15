@@ -7,6 +7,7 @@ class Square {
     this.col = col;
     this.possibleMoves = [];
     this.knight = false;
+    this.value;
   }
   toString() {
     return ` (${this.row},${this.col})`;
@@ -36,12 +37,14 @@ class Board {
 
     return boardArray;
   }
-  findLegalMoves(square) {
+  getSquareFromCoordinaes(row, col) {
+    const square = this.boardArray[row][col];
+    return square;
+  }
+  findLegalMoves(squareArray) {
     let board = this.boardArray;
     let boardSize = 7;
-    let row = square.row;
-    let col = square.col;
-    let moveNum = 0;
+
     let moveSets = [
       [-1, -2],
       [1, -2],
@@ -54,17 +57,19 @@ class Board {
     ];
 
     for (let moveset of moveSets) {
-      console.log(square, row, col);
-      let moveRow = row + moveset[0];
-      let moveCol = col + moveset[1];
-      // let moveToSquare = board[moveRow][moveCol];
+      for (let square of squareArray) {
+        let row = square.row;
+        let col = square.col;
+        let moveRow = row + moveset[0];
+        let moveCol = col + moveset[1];
 
-      // find and store the square you are looking at so you can do squre.movex =
-      if (moveRow <= 7 && moveCol <= 7 && moveCol >= 0 && moveRow >= 0) {
-        // let moveToSquare = board[moveRow][moveCol];
-        // link the current square square
-        square.possibleMoves.push(new Square(moveRow, moveCol));
-        moveNum++;
+        // find and store the square you are looking at so you can do squre.movex =
+        if (moveRow <= 7 && moveCol <= 7 && moveCol >= 0 && moveRow >= 0) {
+          // link the current square square
+
+          let moveToSquare = this.getSquareFromCoordinaes(moveRow, moveCol);
+          square.possibleMoves.push(moveToSquare);
+        }
       }
     }
 
@@ -81,44 +86,59 @@ class Board {
   findMinMoves(startArray, endArray) {
     let queue = [];
     let visisted = new Set();
-    let moveHistory = [];
+    // let moveHistory = {};
+    // moveHistory[startSquare.value] = null;
     const count = 0;
     let board = this.boardArray;
 
-    function getSquareFromCoordinaes(row, col) {
-      const square = board[row][col];
-      return square;
-    }
-
-    let startSquare = getSquareFromCoordinaes(startArray[0], startArray[1]);
+    let startSquare = this.getSquareFromCoordinaes(
+      startArray[0],
+      startArray[1]
+    );
     queue.push(startSquare);
-    visisted.add(startSquare);
-    let endSquare = getSquareFromCoordinaes(endArray[0], endArray[1]);
+    // visisted.add(startSquare);
+    let endSquare = this.getSquareFromCoordinaes(endArray[0], endArray[1]);
 
-    function findMinMovesRec(startSquare, endSquare, queue, visisted) {
-      // if (queue.length > 0) {
-      //   let square = queue.shift();
-      // }
-      while (queue.length > 0) {
-        let square = queue.shift();
+    let moveHistory = {};
+    moveHistory[startSquare.value] = null;
 
-        for (const move of square.possibleMoves) {
-          if (visisted.has(move)) {
-            queue.push(move);
-            visisted.add(move);
-          }
-        }
-        // console.log(`Square ${}`)
+    while (queue.length > 0) {
+      let square = queue.shift();
+
+      if (square.row === endSquare.row && square.col === endSquare.col) {
+        console.log("found the path");
+        return;
       }
-      // shift first element off of the queue
 
-      //then visit that square, enqueue that squares children
+      for (const move of square.possibleMoves) {
+        // console.log(move);
+        // console.log(moveHistory);
+        // if (!visisted.has(move)) {
+        if (!moveHistory.hasOwnProperty(move.value)) {
+          moveHistory[move.value] = square;
 
-      // then  shift the first element and enqueue that squares children
-
-      // if a square is already in the queue dont add it again  so it doesnt go
-      // back to the square that the children came from********
+          queue.push(move);
+          // visisted.add(move);
+          console.log(move.value);
+        }
+      }
+      // console.log(square);
     }
+    // finding the shortest path and remembering it
+    // add its neighbours to the queue
+    // track where nodes that we're adding are coming from
+
+    //
+    // just finding the shortest path
+    // shift first element off of the queue
+
+    //then visit that square, enqueue that squares children
+
+    // then  shift the first element and enqueue that squares children
+
+    // if a square is already in the queue dont add it again  so it doesnt go
+    // back to the square that the children came from********
+    // }
   }
 }
 
@@ -138,4 +158,4 @@ console.log(board.boardArray);
 
 board.findLegalMoves(gameboard);
 
-board.findMinMoves([0, 0], [1, 2]);
+board.findMinMoves([0, 0], [3, 5]);
