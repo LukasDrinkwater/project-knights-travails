@@ -86,9 +86,9 @@ class Board {
   findMinMoves(startArray, endArray) {
     let queue = [];
     let visisted = new Set();
-    // let moveHistory = {};
+    let moveHistory = {};
     // moveHistory[startSquare.value] = null;
-    const count = 0;
+
     let board = this.boardArray;
 
     let startSquare = this.getSquareFromCoordinaes(
@@ -99,8 +99,8 @@ class Board {
     // visisted.add(startSquare);
     let endSquare = this.getSquareFromCoordinaes(endArray[0], endArray[1]);
 
-    let moveHistory = {};
     moveHistory[startSquare.value] = null;
+    console.log(moveHistory);
 
     while (queue.length > 0) {
       let square = queue.shift();
@@ -111,10 +111,11 @@ class Board {
       }
 
       for (const move of square.possibleMoves) {
-        // console.log(move);
+        console.log(move.value);
         // console.log(moveHistory);
-        // if (!visisted.has(move)) {
-        if (!moveHistory.hasOwnProperty(move.value)) {
+        if (!visisted.has(move.value)) {
+          // if (!moveHistory.hasOwnProperty(move.value)) {
+          visisted.add(move.value);
           moveHistory[move.value] = square;
 
           queue.push(move);
