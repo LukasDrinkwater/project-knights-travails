@@ -41,12 +41,16 @@ class Board {
     const square = this.boardArray[row][col];
     return square;
   }
-  getSquarePath(square, ...path) {
-    if (square.moveHistory === square) {
-      return console.log(path);
+  getSquarePath(startSquare, square, path) {
+    if (square === startSquare) {
+      console.log(`Found the path in ${path.length} moves`);
+      path.forEach((element) => {
+        console.log(`[${element.row},${element.col}] `);
+      });
+      return;
     } else {
       path.push(square);
-      return this.getSquarePath(square.moveHistory);
+      return this.getSquarePath(startSquare, square.moveHistory, path);
     }
   }
   findLegalMoves(squareArray) {
@@ -115,7 +119,7 @@ class Board {
       if (square.row === endSquare.row && square.col === endSquare.col) {
         console.log("found the path");
         console.log(square);
-        console.log(this.getSquarePath(square));
+        console.log(this.getSquarePath(startSquare, square, []));
         return;
       }
 
