@@ -7,7 +7,7 @@ class Square {
     this.col = col;
     this.possibleMoves = [];
     this.knight = false;
-    this.value;
+    this.moveHistory = null;
   }
   toString() {
     return ` (${this.row},${this.col})`;
@@ -40,6 +40,14 @@ class Board {
   getSquareFromCoordinaes(row, col) {
     const square = this.boardArray[row][col];
     return square;
+  }
+  getSquarePath(square, ...path) {
+    if (square.moveHistory === square) {
+      return console.log(path);
+    } else {
+      path.push(square);
+      return this.getSquarePath(square.moveHistory);
+    }
   }
   findLegalMoves(squareArray) {
     let board = this.boardArray;
@@ -86,8 +94,7 @@ class Board {
   findMinMoves(startArray, endArray) {
     let queue = [];
     let visisted = new Set();
-    let moveHistory = {};
-    // moveHistory[startSquare.value] = null;
+    let movePath = {};
 
     let board = this.boardArray;
 
@@ -99,31 +106,31 @@ class Board {
     // visisted.add(startSquare);
     let endSquare = this.getSquareFromCoordinaes(endArray[0], endArray[1]);
 
-    moveHistory[startSquare.value] = null;
-    console.log(moveHistory);
+    movePath[startSquare.moveHistory] = null;
+    // console.log(movePath);
 
     while (queue.length > 0) {
       let square = queue.shift();
 
       if (square.row === endSquare.row && square.col === endSquare.col) {
         console.log("found the path");
+        console.log(square);
+        console.log(this.getSquarePath(square));
         return;
       }
 
       for (const move of square.possibleMoves) {
-        console.log(move.value);
-        // console.log(moveHistory);
-        if (!visisted.has(move.value)) {
+        if (!visisted.has(move)) {
           // if (!moveHistory.hasOwnProperty(move.value)) {
-          visisted.add(move.value);
-          moveHistory[move.value] = square;
-
+          visisted.add(move);
           queue.push(move);
-          // visisted.add(move);
-          console.log(move.value);
+
+          move.moveHistory = square;
         }
+        // The way I did it was to store the previous node on the node entity eg.
+        //  If I jump from e3 to f5 I store e3 on f5. Then once I get to the target
+        //  square I recursively search previous nodes until I get to the start square.
       }
-      // console.log(square);
     }
     // finding the shortest path and remembering it
     // add its neighbours to the queue
@@ -159,4 +166,4 @@ console.log(board.boardArray);
 
 board.findLegalMoves(gameboard);
 
-board.findMinMoves([0, 0], [3, 5]);
+board.findMinMoves([0, 0], [1, 2]);
