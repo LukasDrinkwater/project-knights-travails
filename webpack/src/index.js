@@ -10,6 +10,7 @@ class Square {
     this.moveHistory = null;
   }
   toString() {
+    //uses to print out what the gameboard looks like
     return ` (${this.row},${this.col})`;
   }
 }
@@ -23,6 +24,7 @@ class Board {
     let boardArray = this.boardArray;
     let rowArray = [];
 
+    // for in for that makes the gameboard array.
     for (let i = 0; i < 8; i++) {
       boardArray[i] = [];
       for (let j = 0; j < 8; j++) {
@@ -30,17 +32,20 @@ class Board {
         boardArray[i][j] = square;
       }
     }
-
+    // pass each square from the gameboard array into the findLegalMove function
     for (const square of boardArray) {
       this.findLegalMoves(square);
     }
 
     return boardArray;
   }
+  // helper function to get a specific square from the array by taking in a
+  // row and ol
   getSquareFromCoordinaes(row, col) {
     const square = this.boardArray[row][col];
     return square;
   }
+  // function that gets the path that was taken to get to the target square
   getSquarePath(startSquare, square, path) {
     if (square === startSquare) {
       console.log(`Found the path in ${path.length} moves`);
@@ -50,13 +55,14 @@ class Board {
       return;
     } else {
       path.push(square);
+      // if the square isnt the start square recursively call the function
+      //by passing the current squares square.moveHistory link in
       return this.getSquarePath(startSquare, square.moveHistory, path);
     }
   }
+  // find all the possbile move for each square in the array
+  // If a move is legal it pushes it to the current squres possibleMove property
   findLegalMoves(squareArray) {
-    let board = this.boardArray;
-    let boardSize = 7;
-
     let moveSets = [
       [-1, -2],
       [1, -2],
@@ -67,15 +73,16 @@ class Board {
       [-2, 1],
       [-2, -1],
     ];
-
+    // each the 2 values are added or subtracted from the current square to get the
+    // legal move square.
     for (let moveset of moveSets) {
       for (let square of squareArray) {
         let row = square.row;
         let col = square.col;
-        let moveRow = row + moveset[0];
+        let moveRow = row + moveset[0]; // adds/subtracts the value to get new row/col
         let moveCol = col + moveset[1];
 
-        // find and store the square you are looking at so you can do squre.movex =
+        // checks to see if the move would go out the confines of the board
         if (moveRow <= 7 && moveCol <= 7 && moveCol >= 0 && moveRow >= 0) {
           // link the current square square
 
@@ -95,9 +102,10 @@ class Board {
 
     //getting the current square will be similar to making them boardArray[i][j]
   }
+  // main method that finds the minimum amount of moves.
   findMinMoves(startArray, endArray) {
     let queue = [];
-    let visisted = new Set();
+    let visisted = new Set(); // a set can only have 1 of each value
     let movePath = {};
 
     let board = this.boardArray;
@@ -106,34 +114,32 @@ class Board {
       startArray[0],
       startArray[1]
     );
+    // add the start square to the queue so it can be shifted off the array
+    // to start the while loop
     queue.push(startSquare);
-    // visisted.add(startSquare);
     let endSquare = this.getSquareFromCoordinaes(endArray[0], endArray[1]);
 
     movePath[startSquare.moveHistory] = null;
-    // console.log(movePath);
 
     while (queue.length > 0) {
       let square = queue.shift();
-
+      // if the square the has been shifted of the queue matches the end sqaure
+      // go into the if
       if (square.row === endSquare.row && square.col === endSquare.col) {
         console.log("found the path");
-        console.log(square);
+        // calls the getSqaurePath function and passes the square and a blank array
         console.log(this.getSquarePath(startSquare, square, []));
         return;
       }
-
+      // takes each move from the current squares .possibleMoves property and pushes it
+      // to the queue and adds it to the visited Set
       for (const move of square.possibleMoves) {
         if (!visisted.has(move)) {
-          // if (!moveHistory.hasOwnProperty(move.value)) {
           visisted.add(move);
           queue.push(move);
 
           move.moveHistory = square;
         }
-        // The way I did it was to store the previous node on the node entity eg.
-        //  If I jump from e3 to f5 I store e3 on f5. Then once I get to the target
-        //  square I recursively search previous nodes until I get to the start square.
       }
     }
     // finding the shortest path and remembering it
@@ -158,6 +164,7 @@ let board = new Board();
 
 let gameboard = board.createGameboard();
 
+// prints out the gameboard
 for (let i = 0; i < 8; i++) {
   let boardString = "";
   for (let j = 0; j < 8; j++) {
